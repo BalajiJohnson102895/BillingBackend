@@ -9,8 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCors(opt =>
+    opt.AddPolicy("Angular", p => p.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod())
+);
 
 var app = builder.Build();
 
@@ -19,6 +22,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors("Angular");
 
 app.UseHttpsRedirection();
 
